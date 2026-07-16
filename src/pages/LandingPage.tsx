@@ -133,7 +133,7 @@ export default function LandingPage() {
 
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-                <Link to="/register" className="w-full sm:w-auto">
+                <Link to="/login" className="w-full sm:w-auto">
                   <Button variant="primary" size="lg" className="w-full sm:w-auto shadow-lg shadow-blue-500/15" rightIcon={<ArrowRight className="h-4.5 w-4.5" />}>
                     Get Started Free
                   </Button>

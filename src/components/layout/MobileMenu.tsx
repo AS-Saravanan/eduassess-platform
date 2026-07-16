@@ -106,7 +106,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, links }
                   Log In
                 </Button>
               </Link>
-              <Link to="/register" onClick={onClose} className="w-full">
+              <Link to="/login" onClick={onClose} className="w-full">
                 <Button variant="primary" size="lg" className="w-full justify-center" leftIcon={<UserPlus className="h-4 w-4" />}>
                   Get Started
                 </Button>

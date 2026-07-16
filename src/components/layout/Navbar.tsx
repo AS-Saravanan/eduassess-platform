@@ -85,7 +85,7 @@ export const Navbar: React.FC = () => {
                 Log In
               </Button>
             </Link>
-            <Link to="/register" className="rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+            <Link to="/login" className="rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
               <Button variant="primary" size="sm">
                 Get Started
               </Button>

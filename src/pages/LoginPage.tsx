@@ -1,96 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { 
-  Mail, 
-  Lock, 
   Sparkles, 
-  Eye, 
-  EyeOff, 
-  ArrowRight,
   CheckCircle2,
-  HelpCircle
+  Chrome,
+  AlertCircle,
+  GraduationCap,
+  ShieldCheck
 } from "lucide-react";
-import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import { Card, CardContent } from "../components/ui/Card";
+import { useAuth } from "../hooks/useAuth";
 
 export default function LoginPage() {
+  const { signInWithGoogle, user, studentProfile } = useAuth();
   const navigate = useNavigate();
 
-  // Form states
-  const [formData, setFormData] = useState({
-    email: "",
-    password: ""
-  });
-  const [rememberMe, setRememberMe] = useState(false);
-
   // UI States
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedRole, setSelectedRole] = useState<"student" | "admin">("student");
 
-  // Client-side validations
-  const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email address is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 1) {
-      newErrors.password = "Password cannot be empty";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    let key = id;
-    if (id.includes("email-address")) key = "email";
-    if (id.includes("password")) key = "password";
-
-    setFormData(prev => ({
-      ...prev,
-      [key]: value
-    }));
-
-    // Clear dynamic validation error on type
-    if (errors[key]) {
-      setErrors(prev => {
-        const updated = { ...prev };
-        delete updated[key];
-        return updated;
-      });
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
-    setIsLoading(true);
-
-    // Simulate standard authentic network delay
-    setTimeout(() => {
-      setIsLoading(false);
-      setLoginSuccess(true);
-
-      // Temporary success state transition to dashboard
-      setTimeout(() => {
-        navigate("/dashboard");
+  // If already authenticated as student, transition to appropriate page
+  useEffect(() => {
+    if (user && selectedRole === "student") {
+      const timer = setTimeout(() => {
+        if (!studentProfile) {
+          navigate("/student-profile-setup", { replace: true });
+        } else {
+          navigate("/dashboard", { replace: true });
+        }
       }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [user, navigate, selectedRole, studentProfile]);
 
-    }, 1500);
+  const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await signInWithGoogle();
+      // On successful authentication, AuthContext updates state.
+    } catch (err: any) {
+      console.error("Login failed:", err);
+      
+      // User-friendly mapping of common Firebase auth errors
+      if (err.code === "auth/popup-closed-by-user") {
+        setError("The sign-in window was closed before completing. Please try again.");
+      } else if (err.code === "auth/popup-blocked") {
+        setError("The sign-in window was blocked by your browser. Please allow popups for this site.");
+      } else if (err.code === "auth/network-request-failed") {
+        setError("A network error occurred. Please verify your internet connection.");
+      } else {
+        setError("An unexpected error occurred during authentication. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -118,128 +85,127 @@ export default function LoginPage() {
         <Card className="shadow-xl shadow-slate-100/80 border-slate-100/80">
           <CardContent className="p-8">
 
-            {loginSuccess ? (
-              <div className="py-8 text-center space-y-4">
-                <div className="h-16 w-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto animate-bounce">
-                  <CheckCircle2 className="h-10 w-10" />
-                </div>
-                <h2 className="font-display text-2xl font-bold text-slate-950">Welcome Back!</h2>
-                <p className="text-slate-500 text-sm max-w-xs mx-auto font-medium leading-relaxed">
-                  Authentication successful. Loading your personal student dashboard...
-                </p>
-                <div className="pt-2 flex justify-center">
-                  <div className="h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-500 animate-[pulse_1s_infinite] w-full"></div>
+            {user ? (
+              selectedRole === "admin" ? (
+                <div className="py-8 text-center space-y-5 animate-fade-in">
+                  <div className="h-16 w-16 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto">
+                    <ShieldCheck className="h-10 w-10 animate-pulse" />
+                  </div>
+                  <div className="space-y-2">
+                    <h2 className="font-display text-2xl font-bold text-slate-950">
+                      Welcome, {user.displayName || "Admin"}!
+                    </h2>
+                    <p className="text-slate-500 text-sm max-w-xs mx-auto font-medium">
+                      {user.email}
+                    </p>
+                  </div>
+                  <div className="p-4 bg-amber-50/60 border border-amber-100 rounded-2xl">
+                    <p className="text-amber-800 text-sm font-semibold leading-relaxed">
+                      Admin access verification will be implemented in a future milestone.
+                    </p>
+                  </div>
+                  <div className="pt-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="text-slate-600 border-slate-200 hover:bg-slate-50"
+                      onClick={() => window.location.reload()}
+                    >
+                      Return to Selection
+                    </Button>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="py-8 text-center space-y-4 animate-fade-in">
+                  <div className="h-16 w-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto animate-bounce">
+                    <CheckCircle2 className="h-10 w-10" />
+                  </div>
+                  <h2 className="font-display text-2xl font-bold text-slate-950">
+                    Welcome, {user.displayName || "Student"}!
+                  </h2>
+                  <p className="text-slate-500 text-sm max-w-xs mx-auto font-medium leading-relaxed">
+                    Successfully authenticated via Google. Your identity has been verified.
+                  </p>
+                  <div className="pt-2 flex justify-center">
+                    <div className="h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-emerald-500 animate-[pulse_1s_infinite] w-full animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+              )
             ) : (
               <>
                 {/* Form header */}
                 <div className="text-center mb-8 space-y-2">
                   <h1 className="text-2xl font-display font-bold text-slate-950 tracking-tight">
-                    Sign In to EduAssess
+                    Welcome to EduAssess
                   </h1>
                   <p className="text-sm text-slate-500 font-medium">
                     Assess your skills and receive instant AI grading feedback.
                   </p>
                 </div>
 
-                {/* Login Form */}
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <Input
-                    label="Email Address"
-                    placeholder="student@example.com"
-                    type="email"
-                    required
-                    leftIcon={<Mail className="h-4 w-4" />}
-                    value={formData.email}
-                    onChange={handleChange}
-                    error={errors.email}
-                    disabled={isLoading}
-                  />
-
-                  <div className="relative">
-                    <Input
-                      label="Password"
-                      placeholder="••••••••"
-                      type={showPassword ? "text" : "password"}
-                      required
-                      leftIcon={<Lock className="h-4 w-4" />}
-                      rightIcon={
-                        <button
-                          type="button"
-                          tabIndex={-1}
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="text-slate-400 hover:text-slate-600 focus:outline-none focus:text-slate-600"
-                        >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </button>
-                      }
-                      value={formData.password}
-                      onChange={handleChange}
-                      error={errors.password}
-                      disabled={isLoading}
-                    />
+                {/* Error message */}
+                {error && (
+                  <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3 text-red-700 text-sm animate-slide-in">
+                    <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-red-500" />
+                    <span className="font-medium">{error}</span>
                   </div>
+                )}
 
-                  {/* Remember Me & Forgot Password placeholders */}
-                  <div className="flex items-center justify-between pt-1">
-                    <div className="flex items-center">
-                      <input
-                        id="remember-me"
-                        name="remember-me"
-                        type="checkbox"
-                        checked={rememberMe}
-                        onChange={(e) => setRememberMe(e.target.checked)}
-                        disabled={isLoading}
-                        className="h-4.5 w-4.5 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer transition-colors"
-                      />
-                      <label
-                        htmlFor="remember-me"
-                        className="ml-2.5 block text-xs font-semibold text-slate-600 select-none uppercase tracking-wider cursor-pointer"
-                      >
-                        Remember Me
-                      </label>
-                    </div>
-
-                    <div className="text-sm">
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          alert("Forgot Password recovery is a placeholder UI element for Phase 1.");
-                        }}
-                        className="text-xs font-semibold uppercase tracking-wider text-blue-600 hover:text-blue-700 hover:underline transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded px-1"
-                      >
-                        Forgot Password?
-                      </a>
-                    </div>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    className="w-full mt-4"
-                    isLoading={isLoading}
-                    rightIcon={<ArrowRight className="h-4 w-4" />}
-                  >
-                    Sign In
-                  </Button>
-                </form>
-
-                {/* Footer sign up link */}
-                <div className="mt-6 text-center border-t border-slate-100 pt-5">
-                  <p className="text-sm text-slate-500 font-medium">
-                    Don't have an account yet?{" "}
-                    <Link
-                      to="/register"
-                      className="text-blue-600 hover:text-blue-700 hover:underline font-bold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded px-1"
+                {/* Role Selector UI */}
+                <div className="space-y-3 mb-6">
+                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">
+                    Choose your access type
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedRole("student")}
+                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 text-center transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                        selectedRole === "student"
+                          ? "border-blue-600 bg-blue-50/50 text-blue-700"
+                          : "border-slate-100 bg-white hover:bg-slate-50 text-slate-600"
+                      }`}
                     >
-                      Sign Up
-                    </Link>
-                  </p>
+                      <GraduationCap className={`h-6 w-6 mb-1 ${selectedRole === "student" ? "text-blue-600" : "text-slate-400"}`} />
+                      <span className="text-sm font-bold">Student</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedRole("admin")}
+                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 text-center transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                        selectedRole === "admin"
+                          ? "border-blue-600 bg-blue-50/50 text-blue-700"
+                          : "border-slate-100 bg-white hover:bg-slate-50 text-slate-600"
+                      }`}
+                    >
+                      <ShieldCheck className={`h-6 w-6 mb-1 ${selectedRole === "admin" ? "text-blue-600" : "text-slate-400"}`} />
+                      <span className="text-sm font-bold">Admin</span>
+                    </button>
+                  </div>
                 </div>
+
+                {/* Identity Provider Buttons */}
+                <div className="space-y-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full relative flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-700 border-slate-200 shadow-xs h-12 text-sm font-semibold transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    onClick={handleGoogleLogin}
+                    isLoading={isLoading}
+                    disabled={isLoading}
+                    leftIcon={!isLoading ? <Chrome className="h-5 w-5 text-red-500 shrink-0" /> : undefined}
+                  >
+                    Continue with Google
+                  </Button>
+                </div>
+
+                {/* Subtle helper note */}
+                <p className="mt-6 text-center text-xs text-slate-400 font-medium leading-relaxed px-2">
+                  By continuing, you are accessing your secure institution dashboard verified via your Google Single-Sign-On credentials.
+                </p>
               </>
             )}
 
@@ -249,3 +215,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

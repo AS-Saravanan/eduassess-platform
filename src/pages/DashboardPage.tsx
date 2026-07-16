@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import {
   LayoutDashboard,
   BookOpen,
@@ -27,7 +28,7 @@ import { Button } from "../components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/Card";
 import { Input } from "../components/ui/Input";
 import { 
-  studentProfile, 
+  studentProfile as mockStudentProfile, 
   mockAssessments, 
   mockRecommendations, 
   mockFeedbackSnippets 
@@ -52,10 +53,27 @@ export default function DashboardPage() {
   ];
 
   // Handle simulated logout
+  const { user, studentProfile, signOut } = useAuth();
+
+  // Computed profile that prefers the real studentProfile from AuthContext, and falls back to mock fields
+  const displayProfile = {
+    fullName: studentProfile?.fullName || user?.displayName || mockStudentProfile.fullName,
+    schoolName: studentProfile?.schoolName || mockStudentProfile.schoolName,
+    gradeLevel: studentProfile?.grade || mockStudentProfile.gradeLevel,
+    board: studentProfile?.board || "CBSE",
+    studentId: mockStudentProfile.studentId,
+    joinedDate: mockStudentProfile.joinedDate
+  };
+
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const handleLogoutClick = (e: React.MouseEvent) => {
+  const handleLogoutClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     setIsLoggingOut(true);
+    try {
+      await signOut();
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
     setTimeout(() => {
       navigate("/");
     }, 1200);
@@ -153,7 +171,7 @@ export default function DashboardPage() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-600 hover:bg-red-50 cursor-pointer transition-colors"
               >
                 <LogOut className="h-5 w-5" />
-                Logout (UI Only)
+                Log Out
               </button>
             </div>
           </div>
@@ -202,7 +220,7 @@ export default function DashboardPage() {
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-600 hover:bg-red-50/80 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
           >
             <LogOut className="h-5 w-5" />
-            Logout (UI Only)
+            Log Out
           </button>
         </div>
       </aside>
@@ -219,17 +237,31 @@ export default function DashboardPage() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl pointer-events-none" />
               <div className="space-y-2">
                 <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-950 tracking-tight flex items-center gap-2">
-                  Welcome Back, {studentProfile.fullName} <span className="animate-[wave_1.5s_infinite] origin-[70%_70%] inline-block">👋</span>
+                  Welcome Back, {displayProfile.fullName} <span className="animate-[wave_1.5s_infinite] origin-[70%_70%] inline-block">👋</span>
                 </h1>
                 <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-xl">
                   You are making excellent academic headway. Your diagnostic rating was updated today in connection with your Classical Physics quiz results.
                 </p>
                 {/* Profile attributes line */}
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-2 text-xs font-semibold text-slate-400">
-                  <span className="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md">{studentProfile.schoolName}</span>
-                  <span className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md">{studentProfile.gradeLevel}</span>
-                  <span className="text-slate-400">ID: {studentProfile.studentId}</span>
-                </div>
+                {studentProfile ? (
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-2 text-xs font-semibold text-slate-400">
+                    <span className="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md">{displayProfile.schoolName}</span>
+                    <span className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md">{displayProfile.gradeLevel} ({studentProfile.board})</span>
+                    <span className="text-slate-400">{user?.email}</span>
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-2 text-xs font-semibold">
+                    <span className="text-red-600 bg-red-50 px-2.5 py-1 rounded-md font-bold">Complete your profile to personalize your exams.</span>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-blue-600 hover:text-blue-750 h-7 font-bold text-xs underline p-0"
+                      onClick={() => navigate("/student-profile-setup")}
+                    >
+                      Complete Setup
+                    </Button>
+                  </div>
+                )}
               </div>
 
               {/* Top summary diagnostic circle */}
@@ -352,6 +384,85 @@ export default function DashboardPage() {
               {/* Sidebar Cards (Recommendations & Learning Progress Overview) */}
               <div className="lg:col-span-4 space-y-6">
                 
+                {/* Available Exams Card */}
+                <Card className="border-slate-100 overflow-hidden bg-white shadow-sm border-l-4 border-l-blue-600">
+                  <CardHeader className="pb-3 flex flex-row items-center justify-between space-y-0">
+                    <div>
+                      <CardTitle className="text-sm font-display font-extrabold text-slate-950">Available Exams</CardTitle>
+                      <CardDescription className="text-[10px]">Ready-to-generate mock tests</CardDescription>
+                    </div>
+                    <BookOpen className="h-4 w-4 text-blue-600" />
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="p-3 bg-slate-50 border border-slate-100 rounded-xl">
+                      <p className="text-[11px] font-bold text-slate-900">
+                        {displayProfile.gradeLevel} {displayProfile.board} Science
+                      </p>
+                      <p className="text-[10px] text-slate-500 font-medium mt-0.5">Mock evaluation & diagnostic grading enabled</p>
+                    </div>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="w-full text-xs font-bold"
+                      onClick={() => navigate("/exams")}
+                    >
+                      View Exam Options
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Student Profile Card */}
+                <Card className="border-slate-100 overflow-hidden bg-white shadow-sm">
+                  <CardHeader className="pb-3 flex flex-row items-center justify-between space-y-0">
+                    <div>
+                      <CardTitle className="text-sm font-display font-extrabold text-slate-950">Student Profile</CardTitle>
+                      <CardDescription className="text-[10px]">Your academic parameters</CardDescription>
+                    </div>
+                    {studentProfile && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-blue-600 hover:text-blue-700 h-8 font-bold text-[10px] px-2 py-0"
+                        onClick={() => navigate("/student-profile")}
+                      >
+                        Edit
+                      </Button>
+                    )}
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {studentProfile ? (
+                      <div className="space-y-2 text-xs">
+                        <div className="flex justify-between py-1.5 border-b border-slate-50">
+                          <span className="text-slate-400 font-semibold uppercase tracking-wider">Class:</span>
+                          <strong className="text-slate-800 font-bold">{studentProfile.grade}</strong>
+                        </div>
+                        <div className="flex justify-between py-1.5 border-b border-slate-50">
+                          <span className="text-slate-400 font-semibold uppercase tracking-wider">Board:</span>
+                          <strong className="text-slate-800 font-bold">{studentProfile.board}</strong>
+                        </div>
+                        <div className="flex justify-between py-1.5">
+                          <span className="text-slate-400 font-semibold uppercase tracking-wider">School:</span>
+                          <strong className="text-slate-800 font-bold text-right max-w-[180px] truncate">{studentProfile.schoolName}</strong>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3 py-1">
+                        <div className="p-3 bg-red-50/70 border border-red-100 rounded-xl text-red-800 text-[11px] font-semibold leading-relaxed">
+                          Complete your profile to personalize your exams.
+                        </div>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          className="w-full text-xs font-bold"
+                          onClick={() => navigate("/student-profile-setup")}
+                        >
+                          Complete Profile Setup
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
                 {/* Card 3: Recommendations Panel */}
                 <Card className="bg-gradient-to-b from-white to-blue-50/10">
                   <CardHeader>
@@ -655,26 +766,52 @@ export default function DashboardPage() {
               {/* Profile Card left */}
               <Card className="lg:col-span-1">
                 <CardContent className="p-8 text-center space-y-5">
-                  <div className="h-24 w-24 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto text-3xl font-extrabold font-display border-4 border-white shadow-md">
-                    AM
-                  </div>
+                  {user?.photoURL ? (
+                    <img
+                      src={user.photoURL}
+                      alt={displayProfile.fullName}
+                      referrerPolicy="no-referrer"
+                      className="h-24 w-24 rounded-full mx-auto border-4 border-white shadow-md object-cover"
+                    />
+                  ) : (
+                    <div className="h-24 w-24 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto text-3xl font-extrabold font-display border-4 border-white shadow-md">
+                      {displayProfile.fullName.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase()}
+                    </div>
+                  )}
                   <div>
-                    <h3 className="font-display font-bold text-slate-950 text-lg">{studentProfile.fullName}</h3>
-                    <p className="text-xs text-slate-500 font-semibold">{studentProfile.gradeLevel}</p>
+                    <h3 className="font-display font-bold text-slate-950 text-lg">{displayProfile.fullName}</h3>
+                    <p className="text-xs text-slate-500 font-semibold">{user?.email || displayProfile.gradeLevel}</p>
                   </div>
                   <div className="pt-4 border-t border-slate-100 flex flex-col gap-2.5 text-xs text-slate-500 text-left font-medium">
                     <div className="flex justify-between">
                       <span>Unique ID:</span>
-                      <strong className="text-slate-800">{studentProfile.studentId}</strong>
+                      <strong className="text-slate-800">{displayProfile.studentId}</strong>
                     </div>
                     <div className="flex justify-between">
                       <span>Affiliation:</span>
-                      <strong className="text-slate-800">{studentProfile.schoolName}</strong>
+                      <strong className="text-slate-800 max-w-[120px] truncate" title={displayProfile.schoolName}>{displayProfile.schoolName}</strong>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Grade / Class:</span>
+                      <strong className="text-slate-800">{displayProfile.gradeLevel}</strong>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Board:</span>
+                      <strong className="text-slate-800">{displayProfile.board}</strong>
                     </div>
                     <div className="flex justify-between">
                       <span>Joined:</span>
-                      <strong className="text-slate-800">{studentProfile.joinedDate}</strong>
+                      <strong className="text-slate-800">{displayProfile.joinedDate}</strong>
                     </div>
+                  </div>
+                  <div className="pt-2">
+                    <Button 
+                      variant="primary" 
+                      className="w-full text-xs font-bold"
+                      onClick={() => navigate("/student-profile")}
+                    >
+                      Manage Profile Details
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
