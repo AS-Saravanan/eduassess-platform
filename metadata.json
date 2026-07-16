@@ -1,0 +1,6 @@
+{
+  "name": "Student Self-Assessment Platform",
+  "description": "An AI-powered Student Self-Assessment Platform for practice, evaluation, and tracking learning progress.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
