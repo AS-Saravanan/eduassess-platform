@@ -12,7 +12,8 @@ import {
   Clock, 
   Layers,
   Monitor,
-  FileText
+  FileText,
+  Play
 } from "lucide-react";
 
 export default function AssessmentModePlaceholderPage() {
@@ -170,11 +171,20 @@ export default function AssessmentModePlaceholderPage() {
               </div>
             </div>
 
-            {/* Back button */}
-            <div className="pt-2">
+            {/* Actions */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center gap-3 justify-center">
               <Button
                 type="button"
                 className="w-full sm:w-auto px-8 h-12 text-sm font-bold shadow-md shadow-blue-500/10"
+                onClick={() => navigate("/assessment/session")}
+                leftIcon={<Play className="h-4 w-4" />}
+              >
+                Begin Assessment
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full sm:w-auto px-8 h-12 text-sm font-bold"
                 onClick={() => navigate("/dashboard")}
                 leftIcon={<LayoutDashboard className="h-4 w-4" />}
               >

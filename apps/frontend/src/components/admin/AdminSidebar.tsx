@@ -23,7 +23,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ isMobileOpen, onClos
   const menuItems = [
     { id: "dashboard", label: "Dashboard", href: "/admin", icon: <LayoutDashboard className="h-5 w-5" /> },
     { id: "library", label: "Academic Library", href: "/admin/library", icon: <BookOpen className="h-5 w-5" /> },
-    { id: "patterns", label: "Exam Patterns", href: "#", icon: <FileSpreadsheet className="h-5 w-5" />, isPlaceholder: true },
+    { id: "patterns", label: "Exam Patterns", href: "/admin/exam-patterns", icon: <FileSpreadsheet className="h-5 w-5" /> },
     { id: "students", label: "Students", href: "#", icon: <Users className="h-5 w-5" />, isPlaceholder: true },
     { id: "settings", label: "Settings", href: "#", icon: <Settings className="h-5 w-5" />, isPlaceholder: true },
   ];
@@ -34,6 +34,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ isMobileOpen, onClos
 
   const isLinkActive = (item: typeof menuItems[0]) => {
     if (item.isPlaceholder) return false;
+    // Use startsWith to support sub-routes (e.g. /admin/exam-patterns/:id)
+    if (item.href !== "/admin") {
+      return location.pathname.startsWith(item.href);
+    }
     return location.pathname === item.href;
   };
 

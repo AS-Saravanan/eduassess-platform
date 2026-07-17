@@ -38,10 +38,10 @@ export const AdminDashboardPage: React.FC = () => {
     {
       title: "Exam Patterns",
       description: "Define real examination structures, question patterns, weightages, and grading guidelines.",
-      icon: <FileSpreadsheet className="h-6 w-6 text-slate-450" />,
-      actionText: "Configure Patterns (Coming Soon)",
-      href: "#",
-      disabled: true
+      icon: <FileSpreadsheet className="h-6 w-6 text-violet-500" />,
+      actionText: "Configure Patterns",
+      href: "/admin/exam-patterns",
+      disabled: false
     },
     {
       title: "Student Progress",
