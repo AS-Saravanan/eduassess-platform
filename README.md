@@ -1,84 +1,96 @@
-# EduAssess
+# EduAssess — Intelligent Self-Assessment Platform
 
 EduAssess is a premium, modern Student Self-Assessment Platform designed to help students practice and self-assess academic skills, receiving immediate, high-fidelity AI-driven feedback on open-ended subjective questions.
 
-This repository currently houses the **Phase 1 UI/UX Prototype**, establishing a robust, fully responsive design system, mock interactive dashboards, client-side validation logic, and cohesive mock datasets.
+This repository is structured to scale into a robust full-stack application containing Student/Admin portals, AI-powered generation engines, and secure persistence layers.
 
 ---
 
-## 🚀 Phase 1 Project Status
+## 🏛️ Overall Repository Architecture
 
-Phase 1 is successfully compiled and fully functional as an interactive client-side application. No backend databases, session structures, or real authentication services are integrated at this stage. All data flows and state validations operate safely within local React states.
-
-### Core Implemented Features
-* **Landing Page**: Visually stunning, high-contrast overview displaying key value propositions, interactive feature modules, and CTA pathways.
-* **Student Registration (`/register`)**: Fully validated input fields (Name, Email, Password, College) with simulated server lag (1500ms) and dynamic success state before redirection.
-* **Student Sign-In (`/login`)**: Custom field validations, interactive password show/hide, active "Remember Me" toggle, and a dummy "Forgot Password" dialog.
-* **Welcome Dashboard (`/dashboard`)**: Features responsive left-sidebar navigation on desktop alongside an elegant mobile overlay drawer. Contains diagnostic performance summaries, upcoming assessments lists, interactive recommended topics, and examples of deep subjective-text AI grading snippets.
-
----
-
-## 🛠️ Technology Stack
-
-* **React 19** (`^19.0.1` Library & `^19.0.1` DOM)
-* **Vite 6** (`^6.2.3` Build Tooling & Bundler)
-* **TypeScript 5.8** (`~5.8.2` Strict Static Type Checking)
-* **Tailwind CSS v4** (`^4.1.14` Unified Engine with Vite Integration)
-* **React Router v7** (`^7.18.1` Dynamic Client Routing)
-* **Lucide React** (`^0.546.0` Vector SVG Iconography)
-
----
-
-## 📁 Project Structure
+EduAssess is organized as a modular monorepo to separate presentation, business logic, persistent data models, and documentation assets.
 
 ```text
-├── docs/
-│   └── PHASE_1_HANDOFF.md # Deep Phase 1 Architecture & Integration Guidelines
-├── src/
-│   ├── components/        # Shared presentation controls (ui, layout)
-│   ├── pages/             # Route controllers (Landing, Login, Register, Dashboard)
-│   ├── data.ts            # Centralized typescript interface types and mock data
-│   ├── App.tsx            # Routes configurations and standard layout wrapper
-│   ├── main.tsx           # React bootstrapping entry point
-│   └── index.css          # Tailwind directives and display typography imports
-└── package.json           # Module dependency manager
+EduAssess/
+│
+├── frontend/           # React + Vite application (Student Portal, UI Pages)
+│   ├── src/            # Components, pages, mock data, and global state
+│   ├── package.json    # Frontend dependency configurations
+│   └── vite.config.ts  # Vite build & plugin settings
+│
+├── backend/            # Future Node.js + Express API server (AI Question Gen, OCR, Grading)
+│   └── README.md       # Backend blueprint details
+│
+├── database/           # PostgreSQL configuration, Prisma schemas, and migrations
+│   ├── prisma/         # Prisma Schema mapping files
+│   ├── migrations/     # Generated SQL migration history
+│   ├── seed/           # Seeding scripts for default NCERT textbooks & mock datasets
+│   └── design/         # Relational schema ERDs and design plans
+│
+├── docs/               # System blueprints and architectural handoffs
+│   ├── architecture/   # Structural diagrams and design decisions
+│   ├── api/            # API endpoints & data contract definitions
+│   ├── milestones/     # Development timeline and roadmap summaries
+│   └── database-design/# Relational DB normalization specs
+│
+├── .gitignore          # Repository-wide build and cache ignore rules
+├── .env.example        # Reference environment variables list
+├── package.json        # Delegating scripts for root-level orchestration
+└── README.md           # Main project overview and starting guides
 ```
-
-For a comprehensive review of the design systems, layout decisions, and future integration guidelines, please see the [Phase 1 Handoff Documentation](./docs/PHASE_1_HANDOFF.md).
 
 ---
 
-## 💻 Development & Deployment Commands
+## 📁 Folder Directory Purposes
 
-Run these standard scripts from the project root:
+### 1. `/frontend`
+Holds the complete client-side SPA built with **React 19**, **Vite 6**, and **Tailwind CSS v4**. Implements the fully interactive Student Assessment lifecycle—including Sign-In, Onboarding, Syllabus Configuration, Mode Selection, and Mock Test Dashboards.
 
-### Installation
+### 2. `/backend`
+Planned to house the Express + TypeScript backend. This server will securely handle Google Gemini AI integrations, manage coursework uploads, process physical handwritten answer sheet scanning (OCR), and evaluate text answers safely behind API gateways.
+
+### 3. `/database`
+Consolidates all database configurations. Uses **Prisma ORM** to connect with a relational **PostgreSQL** instance. Tracks local migrations, seeding routines (e.g. NCERT book tables), and relational layout schema definitions.
+
+### 4. `/docs`
+Centralized repository documentation. Stores system blueprints, Phase 1 handoff metrics, REST API specs, and logical database diagrams to ensure onboarding clarity.
+
+---
+
+## 💻 Quick Start & Commands
+
+Commands can be run directly from the **repository root** for seamless developer onboarding:
+
+### 1. Installation
+Install all dependencies for the entire project (automatically runs the frontend post-install script):
 ```bash
 npm install
 ```
 
-### Run Local Dev Server
-Runs a local development server on port 3000:
+### 2. Start Frontend Development Server
+Runs the interactive React + Vite platform on port `3000`:
 ```bash
 npm run dev
 ```
 
-### Run Linter & TypeScript Compilation Validation
-Verifies syntax correctness, typescript typings, and basic lint formatting:
-```bash
-npm run lint
-```
-
-### Production Build
-Compiles, optimizes, and bundles your application assets into `dist/` for static hosting:
+### 3. Build Frontend Application
+Compiles, optimizes, and bundles the client application, outputting directly to the root `/dist` folder for production-ready deployment:
 ```bash
 npm run build
 ```
 
+### 4. Code Quality & Linting
+Validate TypeScript static typing and React rules across the frontend scope:
+```bash
+npm run lint
+```
+
 ---
 
-## 🗺️ Future Roadmap (Phase 2 & Beyond)
-
-* **Robust Authentication**: Connect Firebase Authentication or standard secure JWT session tokens to proxy backends.
-* **Database Synchronization**: Integrate Cloud Firestore or Cloud SQL (PostgreSQL) databases using the custom models detailed in `src/data.ts`.
-* **Stateful Assessment Engine**: Build subjective-text form submissions powered by server-side Google Gemini SDK models (`@google/genai`) to provide real-time, personalized evaluations and grading rubrics.
+## 🚀 Future Scalability Scope
+EduAssess is engineered to scale gracefully towards:
+- **Student Portal**: Immersive digital testing modes, performance charts, and learning diagnostics.
+- **Admin Portal**: Interface for teachers and admins to upload textbook material, audit AI grading parameters, and review student progress.
+- **PostgreSQL**: Hardened database to support complex relation structures (Users, Submissions, Question Banks).
+- **Firebase Authentication**: Robust user authentication with social logins.
+- **AI Question Generation & OCR**: Live streaming AI models from the `@google/genai` SDK to dynamically synthesize contextually sound exams and read physical handwritten answer sheets.
