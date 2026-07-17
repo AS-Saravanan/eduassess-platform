@@ -7,9 +7,9 @@
 
 import React from "react";
 import { ArrowLeft, FileText, BookOpen, BookMarked, BrainCircuit, Clock } from "lucide-react";
-import { Button } from "../../../components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/Card";
-import type { AcademicContent, AiStepStatus } from "./academicContent.types";
+import { Button } from "../../../../components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/Card";
+import type { AcademicContent, AiStepStatus } from "../types/academicContent.types";
 
 interface AcademicContentDetailsProps {
   item: AcademicContent;
@@ -39,16 +39,16 @@ const StatusBadge: React.FC<{ status: AcademicContent["processingStatus"] }> = (
 
 const AiStepRow: React.FC<{ label: string; status: AiStepStatus }> = ({ label, status }) => {
   const styles: Record<AiStepStatus, string> = {
-    Pending:     "bg-slate-50 text-slate-400 border-slate-100",
+    Pending:       "bg-slate-50 text-slate-400 border-slate-100",
     "In Progress": "bg-blue-50 text-blue-600 border-blue-100",
-    Done:        "bg-emerald-50 text-emerald-700 border-emerald-100",
-    Failed:      "bg-red-50 text-red-600 border-red-100",
+    Done:          "bg-emerald-50 text-emerald-700 border-emerald-100",
+    Failed:        "bg-red-50 text-red-600 border-red-100",
   };
   const icons: Record<AiStepStatus, React.ReactNode> = {
-    Pending:     <Clock className="h-4 w-4" />,
+    Pending:       <Clock className="h-4 w-4" />,
     "In Progress": <BrainCircuit className="h-4 w-4 animate-pulse" />,
-    Done:        <BrainCircuit className="h-4 w-4" />,
-    Failed:      <BrainCircuit className="h-4 w-4" />,
+    Done:          <BrainCircuit className="h-4 w-4" />,
+    Failed:        <BrainCircuit className="h-4 w-4" />,
   };
 
   return (

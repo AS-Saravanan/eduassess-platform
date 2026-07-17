@@ -8,7 +8,7 @@
 import React from "react";
 import { BookOpen } from "lucide-react";
 import { AcademicContentCard } from "./AcademicContentCard";
-import type { AcademicContent } from "./academicContent.types";
+import type { AcademicContent } from "../types/academicContent.types";
 
 interface AcademicContentListProps {
   items: AcademicContent[];
@@ -39,9 +39,9 @@ export const AcademicContentList: React.FC<AcademicContentListProps> = ({ items 
             <BookOpen className="h-6 w-6" />
           </div>
           <div>
-            <p className="font-semibold text-slate-700">No content uploaded yet</p>
+            <p className="font-semibold text-slate-700">No academic content available</p>
             <p className="text-sm text-slate-400 mt-1">
-              Use the Upload button to add your first academic content.
+              Upload your first textbook or chapter.
             </p>
           </div>
         </div>

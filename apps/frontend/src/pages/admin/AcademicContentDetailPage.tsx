@@ -6,8 +6,8 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Sparkles, Menu, Clock } from "lucide-react";
 import AdminSidebar from "../../components/admin/AdminSidebar";
-import { AcademicContentDetails } from "../../features/admin/academic-content/AcademicContentDetails";
-import { useAcademicContent } from "../../features/admin/academic-content/useAcademicContent";
+import { AcademicContentDetails } from "../../features/admin/academic-content/components/AcademicContentDetails";
+import { useAcademicContent } from "../../features/admin/academic-content/hooks/useAcademicContent";
 
 export const AcademicContentDetailPage: React.FC = () => {
   const navigate = useNavigate();

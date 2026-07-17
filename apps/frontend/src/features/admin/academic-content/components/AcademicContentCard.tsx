@@ -8,9 +8,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { BookOpen, BookMarked, Eye, FileText } from "lucide-react";
-import { Button } from "../../../components/ui/Button";
-import { Card, CardContent } from "../../../components/ui/Card";
-import type { AcademicContent } from "./academicContent.types";
+import { Button } from "../../../../components/ui/Button";
+import { Card, CardContent } from "../../../../components/ui/Card";
+import type { AcademicContent } from "../types/academicContent.types";
 
 interface AcademicContentCardProps {
   item: AcademicContent;

@@ -5,7 +5,7 @@
  * Mirrors the existing mockAcademicData subjects so the library transition feels natural.
  */
 
-import type { AcademicContent } from "./academicContent.types";
+import type { AcademicContent } from "../types/academicContent.types";
 
 const PENDING_STEPS = {
   textExtraction: "Pending" as const,

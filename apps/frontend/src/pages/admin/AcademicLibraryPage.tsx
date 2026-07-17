@@ -25,10 +25,10 @@ import {
 import { Button } from "../../components/ui/Button";
 import { Card, CardContent } from "../../components/ui/Card";
 import AdminSidebar from "../../components/admin/AdminSidebar";
-import { AcademicContentList } from "../../features/admin/academic-content/AcademicContentList";
-import { UploadContentModal } from "../../features/admin/academic-content/UploadContentModal";
-import { useAcademicContent } from "../../features/admin/academic-content/useAcademicContent";
-import type { AcademicContentDraft } from "../../features/admin/academic-content/academicContent.types";
+import { AcademicContentList } from "../../features/admin/academic-content/components/AcademicContentList";
+import { AcademicContentForm } from "../../features/admin/academic-content/components/AcademicContentForm";
+import { useAcademicContent } from "../../features/admin/academic-content/hooks/useAcademicContent";
+import type { AcademicContentDraft } from "../../features/admin/academic-content/types/academicContent.types";
 
 export const AcademicLibraryPage: React.FC = () => {
   const navigate = useNavigate();
@@ -214,7 +214,7 @@ export const AcademicLibraryPage: React.FC = () => {
       </div>
 
       {/* Upload Modal */}
-      <UploadContentModal
+      <AcademicContentForm
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
         onUploadSuccess={handleUploadSuccess}

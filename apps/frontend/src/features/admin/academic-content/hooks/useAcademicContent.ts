@@ -11,8 +11,8 @@
  */
 
 import { useState, useCallback } from "react";
-import type { AcademicContent, AcademicContentDraft } from "./academicContent.types";
-import { ACADEMIC_CONTENT_SEED } from "./academicContent.mock";
+import type { AcademicContent, AcademicContentDraft } from "../types/academicContent.types";
+import { ACADEMIC_CONTENT_SEED } from "../data/academicContent.mock";
 
 function generateId(): string {
   return `ac-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;

@@ -1,23 +1,27 @@
 /**
- * UploadContentModal
+ * AcademicContentForm
  *
  * Upload form for academic content (Full Book or Chapter).
+ * Rendered as a modal on /admin/library.
  * Mock only — stores filename in local state, no actual file processing.
+ *
+ * Renamed from UploadContentModal → AcademicContentForm to align with
+ * the feature's scalable component naming convention.
  */
 
 import React, { useState, useRef } from "react";
 import { X, Upload, ChevronDown, FileText, AlertCircle } from "lucide-react";
-import { Button } from "../../../components/ui/Button";
-import { Input } from "../../../components/ui/Input";
-import type { AcademicContentDraft, ContentType } from "./academicContent.types";
+import { Button } from "../../../../components/ui/Button";
+import { Input } from "../../../../components/ui/Input";
+import type { AcademicContentDraft, ContentType } from "../types/academicContent.types";
 import {
   CONTENT_TYPES,
   GRADE_OPTIONS,
   SUBJECT_OPTIONS,
   ACADEMIC_YEAR_OPTIONS,
-} from "./academicContent.types";
+} from "../types/academicContent.types";
 
-interface UploadContentModalProps {
+interface AcademicContentFormProps {
   isOpen: boolean;
   onClose: () => void;
   onUploadSuccess: (draft: AcademicContentDraft) => void;
@@ -25,8 +29,8 @@ interface UploadContentModalProps {
 
 const EMPTY_FORM = {
   contentType: "Full Book" as ContentType,
-  grade: GRADE_OPTIONS[4],         // Grade 10
-  subject: SUBJECT_OPTIONS[0],     // Mathematics
+  grade: GRADE_OPTIONS[4],              // Grade 10
+  subject: SUBJECT_OPTIONS[0],          // Mathematics
   academicYear: ACADEMIC_YEAR_OPTIONS[2], // 2025-2026
   title: "",
   chapterName: "",
@@ -34,7 +38,7 @@ const EMPTY_FORM = {
   processingStatus: "Uploaded" as const,
 };
 
-export const UploadContentModal: React.FC<UploadContentModalProps> = ({
+export const AcademicContentForm: React.FC<AcademicContentFormProps> = ({
   isOpen,
   onClose,
   onUploadSuccess,
@@ -264,7 +268,7 @@ export const UploadContentModal: React.FC<UploadContentModalProps> = ({
               onKeyDown={(e) => e.key === "Enter" && fileInputRef.current?.click()}
             >
               <div className="h-9 w-9 rounded-lg bg-slate-100 text-slate-400 flex items-center justify-center shrink-0">
-                <Upload className="h-4.5 w-4.5" />
+                <Upload className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
                 {form.fileName ? (
@@ -324,4 +328,4 @@ export const UploadContentModal: React.FC<UploadContentModalProps> = ({
   );
 };
 
-export default UploadContentModal;
+export default AcademicContentForm;
