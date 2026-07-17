@@ -32,16 +32,21 @@ Phase 1 is successfully compiled and fully functional as an interactive client-s
 ## 📁 Project Structure
 
 ```text
+├── apps/
+│   ├── frontend/
+│   │   ├── src/               # React frontend source files
+│   │   ├── index.html         # Frontend HTML entry point
+│   │   ├── package.json       # Frontend module dependency manager
+│   │   ├── vite.config.ts     # Vite configuration
+│   │   └── tsconfig.json      # TypeScript configuration
+│   └── backend/               # Reserved for future backend services
+├── packages/                  # Reserved for future shared library packages
+├── database/                  # Reserved for future database schemas and scripts
 ├── docs/
-│   └── PHASE_1_HANDOFF.md # Deep Phase 1 Architecture & Integration Guidelines
-├── src/
-│   ├── components/        # Shared presentation controls (ui, layout)
-│   ├── pages/             # Route controllers (Landing, Login, Register, Dashboard)
-│   ├── data.ts            # Centralized typescript interface types and mock data
-│   ├── App.tsx            # Routes configurations and standard layout wrapper
-│   ├── main.tsx           # React bootstrapping entry point
-│   └── index.css          # Tailwind directives and display typography imports
-└── package.json           # Module dependency manager
+│   └── PHASE_1_HANDOFF.md     # Deep Phase 1 Architecture & Integration Guidelines
+├── package.json               # Root monorepo workspace configuration
+├── .env.example               # Root template for environment variables
+└── README.md                  # This file
 ```
 
 For a comprehensive review of the design systems, layout decisions, and future integration guidelines, please see the [Phase 1 Handoff Documentation](./docs/PHASE_1_HANDOFF.md).
@@ -58,7 +63,7 @@ npm install
 ```
 
 ### Run Local Dev Server
-Runs a local development server on port 3000:
+Runs the frontend development server on port 3000 from the workspace root:
 ```bash
 npm run dev
 ```
@@ -70,8 +75,13 @@ npm run lint
 ```
 
 ### Production Build
-Compiles, optimizes, and bundles your application assets into `dist/` for static hosting:
+Compiles, optimizes, and bundles your application assets into `apps/frontend/dist/` for static hosting:
 ```bash
+# From the repository root:
+npm run build
+
+# Or directly from the frontend directory:
+cd apps/frontend
 npm run build
 ```
 
