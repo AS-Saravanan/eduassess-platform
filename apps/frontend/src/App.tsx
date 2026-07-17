@@ -17,6 +17,8 @@ import AssessmentModeSelectionPage from "./pages/AssessmentModeSelectionPage";
 import AssessmentModePlaceholderPage from "./pages/AssessmentModePlaceholderPage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
+import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
+import AcademicLibraryPage from "./pages/admin/AcademicLibraryPage";
 
 export default function App() {
   return (
@@ -89,6 +91,8 @@ export default function App() {
               </ProtectedRoute>
             } 
           />
+          <Route path="/admin" element={<AdminDashboardPage />} />
+          <Route path="/admin/library" element={<AcademicLibraryPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

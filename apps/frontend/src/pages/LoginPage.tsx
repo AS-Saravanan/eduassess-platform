@@ -21,8 +21,14 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<"student" | "admin">("student");
 
-  // If already authenticated as student, transition to appropriate page
+  // If already authenticated, transition to appropriate page based on role
   useEffect(() => {
+    if (user && selectedRole === "admin") {
+      const timer = setTimeout(() => {
+        navigate("/admin", { replace: true });
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
     if (user && selectedRole === "student") {
       const timer = setTimeout(() => {
         if (!studentProfile) {
@@ -88,8 +94,8 @@ export default function LoginPage() {
             {user ? (
               selectedRole === "admin" ? (
                 <div className="py-8 text-center space-y-5 animate-fade-in">
-                  <div className="h-16 w-16 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto">
-                    <ShieldCheck className="h-10 w-10 animate-pulse" />
+                  <div className="h-16 w-16 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto animate-bounce">
+                    <ShieldCheck className="h-10 w-10" />
                   </div>
                   <div className="space-y-2">
                     <h2 className="font-display text-2xl font-bold text-slate-950">
@@ -99,20 +105,13 @@ export default function LoginPage() {
                       {user.email}
                     </p>
                   </div>
-                  <div className="p-4 bg-amber-50/60 border border-amber-100 rounded-2xl">
-                    <p className="text-amber-800 text-sm font-semibold leading-relaxed">
-                      Admin access verification will be implemented in a future milestone.
-                    </p>
-                  </div>
-                  <div className="pt-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="text-slate-600 border-slate-200 hover:bg-slate-50"
-                      onClick={() => window.location.reload()}
-                    >
-                      Return to Selection
-                    </Button>
+                  <p className="text-slate-400 text-sm font-medium">
+                    Opening Admin Dashboard…
+                  </p>
+                  <div className="flex justify-center pt-1">
+                    <div className="h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-blue-500 animate-pulse w-full"></div>
+                    </div>
                   </div>
                 </div>
               ) : (
