@@ -14,119 +14,16 @@ The platform bridges the gap between traditional textbook learning and personali
 
 The core idea:
 
-Academic books and real examination patterns are provided by administrators.
+Academic books and real examination patterns are configured in the system.
 AI learns the academic content and assessment style.
 Students practice through realistic AI-generated examinations.
 Students receive feedback, insights, and recommendations to improve.
 
 ---
 
-# Primary User Roles
+# Primary User Role
 
-The platform has two main users:
-
-1. Admin
-2. Student
-
----
-
-# Admin Workflow
-
-The Admin manages academic content and assessment intelligence.
-
-## 1. Academic Content Management
-
-Admin uploads academic materials:
-
-Examples:
-
-- School textbooks
-- Academic reference books
-- Subject materials
-- Chapter-wise learning content
-
-The uploaded content is associated with:
-
-- Grade/Class
-- Academic year
-- Subject
-- Curriculum
-- Chapters/Units
-
-Example:
-
-Grade:
-10
-
-Subject:
-Mathematics
-
-Content:
-
-- Unit 1: Algebra
-- Unit 2: Geometry
-- Unit 3: Statistics
-
----
-
-## 2. AI Knowledge Preparation
-
-The uploaded academic books become the knowledge foundation for the AI system.
-
-The AI should eventually understand:
-
-- Subject concepts
-- Chapters
-- Important topics
-- Definitions
-- Examples
-- Exercises
-- Learning objectives
-
-Future implementation may include:
-
-- Document processing
-- Text extraction
-- Embeddings
-- Vector database
-- Retrieval-Augmented Generation (RAG)
-
----
-
-## 3. Exam Pattern Training
-
-Admin provides real examination examples.
-
-Admin uploads:
-
-- Previous year question papers
-- Sample examination papers
-- Question patterns
-- Marking schemes
-- Assessment guidelines
-
-The purpose:
-
-Teach AI how real exams are structured for a specific grade and subject.
-
-AI should understand:
-
-- Question difficulty
-- Question formats
-- Marks distribution
-- Chapter weightage
-- Expected answer patterns
-- Exam style
-
-Example:
-
-Grade 10 Mathematics:
-
-Pattern:
-
-- Section A: Multiple choice questions
-- Section B: Short answers
-- Section C: Long-form problems
+The platform is focused exclusively on the **Student**.
 
 ---
 
