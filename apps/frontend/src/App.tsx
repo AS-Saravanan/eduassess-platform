@@ -19,14 +19,6 @@ import AssessmentSessionPage from "./pages/AssessmentSessionPage";
 import AssessmentResultsPage from "./pages/AssessmentResultsPage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
-import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
-import AcademicLibraryPage from "./pages/admin/AcademicLibraryPage";
-import AcademicContentDetailPage from "./pages/admin/AcademicContentDetailPage";
-import ExamPatternsPage from "./pages/admin/ExamPatternsPage";
-import ExamPatternCreatePage from "./pages/admin/ExamPatternCreatePage";
-import ExamPatternDetailPage from "./pages/admin/ExamPatternDetailPage";
-import ExamPatternEditPage from "./pages/admin/ExamPatternEditPage";
-import { ExamPatternProvider } from "./features/admin/exam-patterns/ExamPatternContext";
 
 export default function App() {
   return (
@@ -114,42 +106,6 @@ export default function App() {
                 <DashboardPage />
               </ProtectedRoute>
             } 
-          />
-          <Route path="/admin" element={<AdminDashboardPage />} />
-          <Route path="/admin/library" element={<AcademicLibraryPage />} />
-          <Route path="/admin/library/:id" element={<AcademicContentDetailPage />} />
-          {/* Exam Patterns – single provider instance wraps all child routes */}
-          <Route
-            path="/admin/exam-patterns"
-            element={
-              <ExamPatternProvider>
-                <ExamPatternsPage />
-              </ExamPatternProvider>
-            }
-          />
-          <Route
-            path="/admin/exam-patterns/create"
-            element={
-              <ExamPatternProvider>
-                <ExamPatternCreatePage />
-              </ExamPatternProvider>
-            }
-          />
-          <Route
-            path="/admin/exam-patterns/:id"
-            element={
-              <ExamPatternProvider>
-                <ExamPatternDetailPage />
-              </ExamPatternProvider>
-            }
-          />
-          <Route
-            path="/admin/exam-patterns/:id/edit"
-            element={
-              <ExamPatternProvider>
-                <ExamPatternEditPage />
-              </ExamPatternProvider>
-            }
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -1,6 +1,6 @@
 # EduAssess Platform - Instructional Context
 
-EduAssess is an AI-powered student self-assessment platform. This project currently serves as a fully functional Phase 1 UI/UX prototype.
+EduAssess is an AI-powered student self-assessment platform. This project currently serves as a fully functional Phase 1 UI/UX prototype focusing exclusively on the Student journey.
 
 ## Project Overview
 
@@ -21,7 +21,7 @@ EduAssess is an AI-powered student self-assessment platform. This project curren
 │   │   ├── src/
 │   │   │   ├── components/  # Atomic UI components
 │   │   │   ├── context/     # AuthContext (Firebase auth)
-│   │   │   ├── features/    # Feature-specific logic (admin, student)
+│   │   │   ├── features/    # Student feature logic
 │   │   │   ├── pages/       # Route controllers
 │   │   │   └── data/        # Mock data/types
 │   │   └── vite.config.ts   # Vite configuration
@@ -44,7 +44,7 @@ Run all commands from the repository root:
 
 - **Component Structure**: Atomic UI components (`components/ui/`) use `React.forwardRef` and `Lucide` icons.
 - **Styling**: Pure Tailwind CSS classes (defined in `src/index.css`). No extra CSS libraries.
-- **State Management**: React Context (`AuthProvider`) for global auth state; Feature-specific context (`ExamPatternProvider`) for feature logic.
+- **State Management**: React Context (`AuthProvider`) for global auth state; Feature-specific context for student assessment flows.
 - **Type Safety**: Strict TypeScript (`tsconfig.json`). Ensure all new components and data models have explicit type definitions.
 - **Accessibility**: Follow accessibility standards (ARIA attributes, keyboard navigation support).
 - **Environment**: Firebase credentials are injected via environment variables from the root `.env` file (configured in `apps/frontend/vite.config.ts`).

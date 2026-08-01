@@ -19,17 +19,10 @@ export default function LoginPage() {
   // UI States
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedRole, setSelectedRole] = useState<"student" | "admin">("student");
 
-  // If already authenticated, transition to appropriate page based on role
+  // If already authenticated, transition to appropriate page
   useEffect(() => {
-    if (user && selectedRole === "admin") {
-      const timer = setTimeout(() => {
-        navigate("/admin", { replace: true });
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-    if (user && selectedRole === "student") {
+    if (user) {
       const timer = setTimeout(() => {
         if (!studentProfile) {
           navigate("/student-profile-setup", { replace: true });
@@ -39,7 +32,7 @@ export default function LoginPage() {
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [user, navigate, selectedRole, studentProfile]);
+  }, [user, navigate, studentProfile]);
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
@@ -92,29 +85,6 @@ export default function LoginPage() {
           <CardContent className="p-8">
 
             {user ? (
-              selectedRole === "admin" ? (
-                <div className="py-8 text-center space-y-5 animate-fade-in">
-                  <div className="h-16 w-16 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto animate-bounce">
-                    <ShieldCheck className="h-10 w-10" />
-                  </div>
-                  <div className="space-y-2">
-                    <h2 className="font-display text-2xl font-bold text-slate-950">
-                      Welcome, {user.displayName || "Admin"}!
-                    </h2>
-                    <p className="text-slate-500 text-sm max-w-xs mx-auto font-medium">
-                      {user.email}
-                    </p>
-                  </div>
-                  <p className="text-slate-400 text-sm font-medium">
-                    Opening Admin Dashboard…
-                  </p>
-                  <div className="flex justify-center pt-1">
-                    <div className="h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-blue-500 animate-pulse w-full"></div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
                 <div className="py-8 text-center space-y-4 animate-fade-in">
                   <div className="h-16 w-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto animate-bounce">
                     <CheckCircle2 className="h-10 w-10" />
@@ -131,7 +101,6 @@ export default function LoginPage() {
                     </div>
                   </div>
                 </div>
-              )
             ) : (
               <>
                 {/* Form header */}
@@ -151,40 +120,6 @@ export default function LoginPage() {
                     <span className="font-medium">{error}</span>
                   </div>
                 )}
-
-                {/* Role Selector UI */}
-                <div className="space-y-3 mb-6">
-                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">
-                    Choose your access type
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedRole("student")}
-                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 text-center transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        selectedRole === "student"
-                          ? "border-blue-600 bg-blue-50/50 text-blue-700"
-                          : "border-slate-100 bg-white hover:bg-slate-50 text-slate-600"
-                      }`}
-                    >
-                      <GraduationCap className={`h-6 w-6 mb-1 ${selectedRole === "student" ? "text-blue-600" : "text-slate-400"}`} />
-                      <span className="text-sm font-bold">Student</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setSelectedRole("admin")}
-                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 text-center transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        selectedRole === "admin"
-                          ? "border-blue-600 bg-blue-50/50 text-blue-700"
-                          : "border-slate-100 bg-white hover:bg-slate-50 text-slate-600"
-                      }`}
-                    >
-                      <ShieldCheck className={`h-6 w-6 mb-1 ${selectedRole === "admin" ? "text-blue-600" : "text-slate-400"}`} />
-                      <span className="text-sm font-bold">Admin</span>
-                    </button>
-                  </div>
-                </div>
 
                 {/* Identity Provider Buttons */}
                 <div className="space-y-4">
